@@ -1,57 +1,128 @@
 # 🌱 FoodShare Chain
 
-A polished third-year Computer Engineering academic project: separate HTML/CSS/JavaScript pages, Node.js/Express, MongoDB user accounts and real MetaMask transactions on Ethereum Sepolia.
+### Blockchain-Powered Food Donation and Tracking System
 
-## Important blockchain verification notice
+FoodShare Chain is a full-stack academic project developed to connect food donors with NGOs and reduce food waste through transparent donation tracking.
 
-The previous contract address was supplied from an earlier project: `0xb541B9bF3D1BE06f8f1140a6103826cCaf6E6dc7`. Its verified source/ABI could **not be independently retrieved during package creation**. The `frontend/js/contract.js` ABI was reconstructed from previously documented function signatures, and the application checks for deployed bytecode at wallet connection. Bytecode existence alone **does not verify ABI compatibility or permissions**. Test `donationCount`, `getDonation`, `createDonation`, `claimDonation` and `markCollected` against the actual deployed source before the faculty demo. Events are included as illustrative signatures and not relied upon by the UI. The `blockchain/FoodShare.sol` file is a NEW, compatible alternative source, NOT a claim that it is the original deployed source. If the old address fails, deploy the provided contract to Sepolia in Remix using MetaMask and update `CONTRACT_ADDRESS` in `frontend/js/contract.js`. Never send anyone your wallet recovery phrase or private key.
+The application combines a Node.js and MongoDB backend with Ethereum blockchain integration. Users can register, donate surplus food, claim available donations, and track their status through MetaMask transactions on the Ethereum Sepolia test network.
 
-## Setup on Windows 11
+## ✨ Key Features
 
-1. Install Node.js 20+ and MongoDB Community Server (or use your own MongoDB Atlas connection string). Start MongoDB.
-2. Open the project in VS Code, open a terminal, and run:
+- Separate, responsive interfaces for different application functions.
+- Donor and NGO account registration and login.
+- Secure password hashing and session-based authentication.
+- MetaMask wallet integration.
+- Blockchain-based food donation registration.
+- Explore available food donations.
+- Claim donations using a separate NGO wallet.
+- Track donations through three stages: Available, Claimed and Collected.
+- View personal donations and claims.
+- Dashboard with live blockchain statistics.
+- User profile management.
+- Transaction verification through Sepolia Etherscan.
 
-```powershell
+## 🛠️ Technologies Used
+
+| Component | Technology |
+|---|---|
+| Frontend | HTML5, CSS3, JavaScript |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Blockchain | Ethereum Sepolia |
+| Smart Contract | Solidity |
+| Blockchain Library | Ethers.js v6.13.4 |
+| Wallet | MetaMask |
+| Development Tools | VS Code, Git, GitHub |
+
+## 📁 Project Structure
+
+```text
+FoodShare-Chain/
+│
+├── backend/
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   └── User.js
+│   ├── routes/
+│   │   └── auth.js
+│   ├── .env.example
+│   ├── package.json
+│   ├── package-lock.json
+│   └── server.js
+│
+├── blockchain/
+│   └── FoodShare.sol
+│
+├── frontend/
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   ├── api.js
+│   │   ├── app.js
+│   │   ├── contract.js
+│   │   └── wallet.js
+│   ├── index.html
+│   ├── register.html
+│   ├── login.html
+│   ├── dashboard.html
+│   ├── donate.html
+│   ├── available-food.html
+│   ├── my-donations.html
+│   ├── my-claims.html
+│   ├── tracking.html
+│   ├── profile.html
+│   └── about.html
+│
+├── .gitignore
+└── README.md
+```
+
+## ⚙️ Installation and Setup
+
+### Prerequisites
+
+Install the following:
+
+- Node.js 20 or later
+- MongoDB Community Server
+- Visual Studio Code
+- MetaMask browser extension
+- Git
+
+An internet connection is required for Sepolia blockchain access and the Ethers.js CDN.
+
+### Step 1: Clone the repository
+
+```bash
+git clone https://github.com/samruddhiadalinge-hue/FoodShare-chain.git
+```
+
+Navigate to the project:
+
+```bash
+cd FoodShare-chain
+```
+
+### Step 2: Install backend dependencies
+
+```bash
 cd backend
 npm install
+```
+
+### Step 3: Configure environment variables
+
+Create a `.env` file inside the `backend` folder by copying `.env.example`.
+
+For Windows PowerShell:
+
+```powershell
 Copy-Item .env.example .env
 ```
 
-3. Edit `backend/.env`: replace `SESSION_SECRET` with a unique random secret of at least 32 characters, and set `MONGO_URI` (local default already provided). Do not commit `.env`.
-4. Run:
+Configure the environment variables:
 
-```powershell
-npm start
-```
-
-5. Open **http://localhost:8080**. Do NOT open HTML via `file://` or run a separate Live Server: the Express server serves both the frontend and `/api` endpoints.
-6. Install MetaMask, switch to Ethereum Sepolia, and get test ETH from a legitimate Sepolia faucet. No real funds are required. The browser needs internet access to import Ethers.js from jsDelivr and reach Sepolia.
-
-## Demo workflow
-
-- Register as Donor, log in, connect donor MetaMask on Sepolia, visit Donate Food, create donation, approve transaction, wait for confirmation.
-- Logout and register another email as NGO. Switch MetaMask to a **different** wallet, connect, explore food and claim the available donation. The contract enforces actual permissions; the website role is an application-level UI restriction, not on-chain role enforcement.
-- Open Tracking, enter donation ID, and mark collected with an authorized donor or claimer wallet. Inspect the transaction hash on Sepolia Etherscan.
-- `My Donations` and `My Claims` filter by **currently connected wallet**, not merely by logged-in email. Wallet association is session-only and is not claimed as cryptographically bound to the MongoDB user.
-
-## Architecture and notes
-
-- Frontend: 11 distinct HTML entry pages with one shared stylesheet and shared JavaScript rendering logic; no React/Angular.
-- Backend: Express session authentication stored in MongoDB, bcrypt password hashing, input validation, login rate limit, user profiles.
-- Blockchain: Ethers.js v6.13.4; MetaMask signs all state-changing transactions. The chain, not MongoDB, is authoritative for donation state.
-- Donation IDs are probed for both 0- and 1-based indexing due to missing original source. The supplied alternative contract is 1-based. `getDonations` limits the academic demo to 500 records for responsiveness; use event indexing/pagination for a production system.
-- `markCollected` button is shown for claimed records, but the contract itself determines which wallet may execute it. A donor/NGO role selected at registration is not enforced on chain.
-- Do not treat this as a production-audited contract or security-hardened deployment. Run end-to-end testing with two test wallets before presenting.
-
-## Project pages
-
-Home, Register, Login, Dashboard, Donate Food, Explore Food, My Donations, My Claims, Tracking, Profile, About.
-
-## Troubleshooting
-
-- MongoDB connection refused: start local MongoDB service or correct `MONGO_URI`.
-- Missing `.env`: create it from `.env.example`, add a long `SESSION_SECRET`.
-- No contract bytecode: verify Sepolia address, or deploy `blockchain/FoodShare.sol` and update `contract.js`.
-- Contract call decode/revert: the original deployed contract's ABI or access rules may differ; use verified source or deploy the supplied alternative.
-- Wrong wallet/network: switch MetaMask to Sepolia and use the appropriate donor/NGO wallet.
-- Ethers.js import fails: check internet connectivity and jsDelivr access.
+```env
+PORT=8080
+MONGO_URI=mongodb://127.0.0.1:27017/food
